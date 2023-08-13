@@ -1,6 +1,8 @@
 const express = require("express");
 const transcodeVideoQuality = require("./transcoder.js");
+const generateSingedUploadUrl = require('./s3')
 const cors = require("cors");
+const axios = require("axios");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
@@ -16,7 +18,7 @@ const storage = multer.diskStorage({
         cb(null, "input-videos/");
     },
     filename: function (req, file, cb) {
-        const fileExtension = path.extname(file.originalname);
+        const fileExtension = req.body.fileType;
         console.log(fileExtension);
         format = fileExtension;
         cb(null, "input" + fileExtension);
@@ -25,9 +27,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.post("/transcodeVideo", upload.single("video"), async (req, res) => {
-    const quality = req.body.quality;
-    console.log(typeof quality, quality);
-    const inputFilePath = `./input-videos/input${format}`;
+    // console.log(req.body);
+    const s3Url = req.body.s3Url;
+    const inputFilePath = `./input-videos/input.${req.body.fileType}`;
+    await downloadFile(s3Url, inputFilePath);
     const outputPaths = [
         { path: `./output-videos/output-240p.mp4`, resolution: "426x240" },
         { path: `./output-videos/output-360p.mp4`, resolution: "640x360" },
@@ -37,6 +40,10 @@ app.post("/transcodeVideo", upload.single("video"), async (req, res) => {
         { path: `./output-videos/output-1440p.mp4`, resolution: "2560x1440" },
         { path: `./output-videos/output-2160p.mp4`, resolution: "3840x2160" },
     ];
+    const resData = {
+        id: req.body.id,
+        urls: [],
+    };
 
     for (const outputPathInfo of outputPaths) {
         await transcodeVideoQuality(
@@ -44,10 +51,34 @@ app.post("/transcodeVideo", upload.single("video"), async (req, res) => {
             outputPathInfo.path,
             outputPathInfo.resolution
         );
+        const url = await generateSingedUploadUrl();
+        const contentType = "video/" + req.body.fileType;
+        // console.log(contentType);
+        const fileContent = fs.readFileSync(outputPathInfo.path);
+        await axios.put(url, fileContent, {
+            headers: {
+                "content-Type": contentType,
+            },
+        });
+        const tempData ={
+            url:  url.split("?")[0],
+            quality: outputPathInfo.resolution
+        };
+        resData.urls.push(tempData)
     }
-    res.send({ msg: "Conversions Done!" });
+    res.send({resData});
 });
 
 app.listen(3000, () => {
     console.log("server is listening on port 3000");
 });
+
+async function downloadFile(url, filePath) {
+    try {
+        const response = await axios.get(url, { responseType: "arraybuffer" });
+        fs.writeFileSync(filePath, response.data);
+        console.log(`Downloaded and saved file to ${filePath}`);
+    } catch (error) {
+        console.error("Error downloading file:", error);
+    }
+}
