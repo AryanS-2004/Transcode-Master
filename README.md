@@ -1,6 +1,7 @@
 # Transcode Master
 
 
+***Frontend Part to use this service is in the Transcoder-User-View Repo***
 
 
 Are you tired of dealing with incompatible video formats or struggling with large file sizes that make sharing videos a hassle? Look no further! TranscodeMaster is the ultimate solution to all your video transcoding needs. This innovative app empowers you to effortlessly convert your videos into the perfect format and resolution of your choice, granting you complete control over your video content.
