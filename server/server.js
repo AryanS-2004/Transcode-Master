@@ -1,6 +1,7 @@
 const express = require("express");
 const transcodeVideoQuality = require("./transcoder.js");
 const generateSingedUploadUrl = require('./s3')
+const generateSingedUploadUrlMp4 = require('./s3')
 const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
@@ -11,6 +12,13 @@ app.use(cors());
 app.use(express.json());
 
 let format;
+
+app.get('/s3url', async(req, res) => {
+    console.log("Hi");
+    const url = await generateSingedUploadUrl();
+    console.log(url);
+    res.send({url});
+})
 
 app.post("/transcodeVideo",  async (req, res) => {
     console.log(req.body);
@@ -37,7 +45,7 @@ app.post("/transcodeVideo",  async (req, res) => {
             outputPathInfo.path,
             outputPathInfo.resolution
         );
-        const url = await generateSingedUploadUrl();
+        const url = await generateSingedUploadUrlMp4();
         const contentType = "video/" + req.body.fileType;
         // console.log(contentType);
         const fileContent = fs.readFileSync(outputPathInfo.path);

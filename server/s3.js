@@ -18,7 +18,7 @@ const s3 =  new S3({
     signatureVersion: 'v4'
 })
 
-async function generateSingedUploadUrl() {
+async function generateSingedUploadUrlMp4() {
 
     const rawBytes = randomBytes(16);
     const imageName  = rawBytes.toString('hex') + '.mp4';
@@ -33,4 +33,19 @@ async function generateSingedUploadUrl() {
     return uploadUrl;
 }
 
-module.exports = generateSingedUploadUrl;
+async function generateSingedUploadUrl() {
+
+    const rawBytes = randomBytes(16);
+    const imageName  = rawBytes.toString('hex');
+    console.log(imageName);
+    const params = {
+        Bucket: bucketName,
+        Key: imageName,
+        Expires: 180
+    }
+
+    const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
+    return uploadUrl;
+}
+
+module.exports = generateSingedUploadUrlMp4, generateSingedUploadUrl;
