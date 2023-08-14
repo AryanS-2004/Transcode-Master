@@ -9,7 +9,9 @@ The service allows the user to convert their uploaded video to different resolut
 ![IMG_20230814_171200](https://github.com/AryanS-2004/Transcode-Master/assets/102866440/a1bd759e-aefe-4c5e-9d35-da56be4bb69f)
 
 
-Any suggestions may be sent to the following email address: aryan.coding01@gmail.com
+## Share Your Ideas
+
+We value your feedback! Feel free to share your suggestions or feedback with us at aryan.coding01@gmail.com. Your insights help us improve!
 
 
 # Setup Instructions
