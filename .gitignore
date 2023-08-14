@@ -4,3 +4,4 @@ server/ffmpeg-6.0
 server/input-videos/
 server/output-videos/
 server/.env
+free-server-class.pem
