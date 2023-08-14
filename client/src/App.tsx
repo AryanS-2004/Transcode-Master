@@ -3,7 +3,6 @@ import axios from "axios";
 import { v4 as uuidv4 } from 'uuid';
 import { Dna } from "react-loader-spinner";
 import "./App.css";
-import ReactPlayer from "react-player";
 
 
 type TransodedData = {
@@ -11,39 +10,43 @@ type TransodedData = {
   quality: string,
 }
 
+type UserVideoData = {
+  id: string,
+  s3Url: string,
+  fileType: string
+}
 function App() {
-  const [file, setFile] = useState();
-  const [fileUploaded, setFileUploaded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [videoUrl, setVideoUrl] = useState('');
+  const [file, setFile] = useState<any>();
+  const [fileUploaded, setFileUploaded] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [transcodedVideosData, setTranscodedVideosData] = useState<TransodedData[]>([]);
 
   const handleSubmit = async () => {
-    if (!fileUploaded) return;
+    if (!fileUploaded || !file) return;
     //get secure url from server
     setLoading(true);
     const response = await axios.get('http://localhost:3000/s3url');
-    const url = response.data.url;
+    const url: string = response.data.url;
     console.log(url);
 
     //upload video to s3
-    const contentType = 'video/' + file.name.split('.').pop();
+    const contentType: string = 'video/' + file.name.split('.').pop();
     console.log(contentType);
     await axios.put(url, file, {
       headers: {
         "content-Type": contentType,
       }
     });
-    const s3Url = url.split('?')[0];
+    const s3Url: string = url.split('?')[0];
     console.log(s3Url);
-    setVideoUrl(s3Url);
+
+
     //send the url to transcoder with other metadata as well
     //transcode videos and get all the 
-    // console.log(file.type)
 
     try {
       setLoading(true);
-      const data = {
+      const data: UserVideoData = {
         id: uuidv4(),
         s3Url,
         fileType: file.name.split('.').pop(),
@@ -57,7 +60,7 @@ function App() {
           },
         }
       );
-      console.log(transcodedVideo);
+      // console.log(transcodedVideo);
       console.log(transcodedVideo.data);
       setTranscodedVideosData(transcodedVideo.data.urls)
       setLoading(false);
@@ -66,10 +69,9 @@ function App() {
       console.log(err);
     }
     setLoading(false);
-
   };
 
-  const fileChange = (e) => {
+  const fileChange = (e: any) => {
     const selectedFile = e.target.files[0];
     const fileSize = selectedFile.size / (1024 * 1024);
     const maxFileSize = 25;
@@ -89,7 +91,7 @@ function App() {
       <div className="h-screen">
         {loading && (
           <div className="h-screen w-screen absolute z-10 bg-[#0D1B2A] opacity-50 flex">
-            <div className="flex mx-auto my-auto">
+            <div className="flex mx-auto mt-[530px] flex-col">
               <Dna
                 visible={true}
                 height="180"
