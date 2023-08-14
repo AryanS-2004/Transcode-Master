@@ -4,7 +4,7 @@
 The service allows the user to convert their uploaded video to different resolutions so they can upload it to social media or do whatever they want. Social media platforms can use this service to show videos to their users in different resolutions.
 
 
-###Workflow of the application is explained in this picture
+### Workflow of the application is explained in this picture
 
 ![IMG_20230814_171200](https://github.com/AryanS-2004/Transcode-Master/assets/102866440/a1bd759e-aefe-4c5e-9d35-da56be4bb69f)
 
