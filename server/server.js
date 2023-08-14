@@ -3,7 +3,6 @@ const transcodeVideoQuality = require("./transcoder.js");
 const generateSingedUploadUrl = require('./s3')
 const cors = require("cors");
 const axios = require("axios");
-const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
@@ -13,21 +12,8 @@ app.use(express.json());
 
 let format;
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "input-videos/");
-    },
-    filename: function (req, file, cb) {
-        const fileExtension = req.body.fileType;
-        console.log(fileExtension);
-        format = fileExtension;
-        cb(null, "input" + fileExtension);
-    },
-});
-const upload = multer({ storage });
-
-app.post("/transcodeVideo", upload.single("video"), async (req, res) => {
-    // console.log(req.body);
+app.post("/transcodeVideo",  async (req, res) => {
+    console.log(req.body);
     const s3Url = req.body.s3Url;
     const inputFilePath = `./input-videos/input.${req.body.fileType}`;
     await downloadFile(s3Url, inputFilePath);
@@ -66,7 +52,9 @@ app.post("/transcodeVideo", upload.single("video"), async (req, res) => {
         };
         resData.urls.push(tempData)
     }
-    res.send({resData});
+
+    console.log("\n\n\nAll conversions completed!\n\n\n")
+    res.send(resData);
 });
 
 app.listen(3000, () => {

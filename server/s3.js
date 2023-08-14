@@ -21,7 +21,7 @@ const s3 =  new S3({
 async function generateSingedUploadUrl() {
 
     const rawBytes = randomBytes(16);
-    const imageName  = rawBytes.toString('hex');
+    const imageName  = rawBytes.toString('hex') + '.mp4';
     console.log(imageName);
     const params = {
         Bucket: bucketName,

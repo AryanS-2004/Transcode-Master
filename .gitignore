@@ -2,3 +2,6 @@ client/node_modules
 server/node_modules
 server/ffmpeg-6.0
 ffmpeg
+server/input-videos/
+server/output-videos/
+server/.env
