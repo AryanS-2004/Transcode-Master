@@ -6,7 +6,7 @@ The service allows the user to convert their uploaded video to different resolut
 
 ### Workflow of the application is explained in this picture
 
-![IMG_20230814_171200](https://github.com/AryanS-2004/Transcode-Master/assets/102866440/a1bd759e-aefe-4c5e-9d35-da56be4bb69f)
+![IMG_20230814_171200](https://github.com/AryanS-2004/Transcode-Master/assets/102866440/eab12d79-bacc-45cc-8906-d47a204f803b)
 
 
 ## Share Your Ideas
