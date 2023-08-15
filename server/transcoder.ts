@@ -1,9 +1,9 @@
-const { spawn } = require('child_process');
+import { spawn } from 'child_process';
 
 const ffmpegPath = './ffmpeg';
 
 
-async function transcodeVideoQuality(inputFile, outputFile, resolution) {
+async function transcodeVideoQuality(inputFile: string, outputFile: string, resolution: string):Promise<void> {
   return new Promise((resolve, reject) => {
     const ffmpeg = spawn(ffmpegPath, [
       '-i', inputFile,
@@ -33,4 +33,4 @@ async function transcodeVideoQuality(inputFile, outputFile, resolution) {
   });
 }
 
-module.exports = transcodeVideoQuality;
+export default transcodeVideoQuality;

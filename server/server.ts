@@ -1,11 +1,10 @@
-const express = require("express");
-const transcodeVideoQuality = require("./transcoder.js");
-const generateSingedUploadUrl = require('./s3')
-const generateSingedUploadUrlMp4 = require('./s3')
-const cors = require("cors");
-const axios = require("axios");
-const path = require("path");
-const fs = require("fs");
+import express, {Request, Response} from "express";
+import transcodeVideoQuality from "./transcoder.js";
+import {generateSingedUploadUrl, generateSingedUploadUrlMp4} from './s3';
+import cors from "cors";
+import axios from "axios";
+import path from "path";
+import fs from "fs";
 
 const app = express();
 app.use(cors());
@@ -13,14 +12,23 @@ app.use(express.json());
 
 let format;
 
-app.get('/s3url', async(req, res) => {
+type UrlData = {
+    quality: string,
+    url: string,
+}
+type ResponseData = {
+    id: string,
+    urls : UrlData[],
+}
+
+app.get('/s3url', async(req :Request, res : Response) => {
     console.log("Hi");
     const url = await generateSingedUploadUrl();
     console.log(url);
     res.send({url});
 })
 
-app.post("/transcodeVideo",  async (req, res) => {
+app.post("/transcodeVideo",  async (req :Request, res: Response) => {
     console.log(req.body);
     const s3Url = req.body.s3Url;
     const inputFilePath = `./input-videos/input.${req.body.fileType}`;
@@ -34,7 +42,7 @@ app.post("/transcodeVideo",  async (req, res) => {
         { path: `./output-videos/output-1440p.mp4`, resolution: "2560x1440" },
         { path: `./output-videos/output-2160p.mp4`, resolution: "3840x2160" },
     ];
-    const resData = {
+    const resData : ResponseData = {
         id: req.body.id,
         urls: [],
     };
@@ -69,7 +77,7 @@ app.listen(3000, () => {
     console.log("server is listening on port 3000");
 });
 
-async function downloadFile(url, filePath) {
+async function downloadFile(url :string, filePath: string) {
     try {
         const response = await axios.get(url, { responseType: "arraybuffer" });
         fs.writeFileSync(filePath, response.data);

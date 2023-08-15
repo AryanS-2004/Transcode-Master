@@ -1,7 +1,7 @@
-const { S3 } = require( 'aws-sdk');
-const dotenv = require( 'dotenv');
-const { randomBytes } = require( 'crypto');
-const { promisify } = require( 'util');
+import { S3 } from  'aws-sdk';
+import dotenv  from 'dotenv';
+import { randomBytes } from 'crypto';
+import { promisify } from 'util';
 
 
 dotenv.config();
@@ -18,7 +18,7 @@ const s3 =  new S3({
     signatureVersion: 'v4'
 })
 
-async function generateSingedUploadUrlMp4() {
+export async function generateSingedUploadUrlMp4() {
 
     const rawBytes = randomBytes(16);
     const imageName  = rawBytes.toString('hex') + '.mp4';
@@ -33,7 +33,7 @@ async function generateSingedUploadUrlMp4() {
     return uploadUrl;
 }
 
-async function generateSingedUploadUrl() {
+export async function generateSingedUploadUrl() {
 
     const rawBytes = randomBytes(16);
     const imageName  = rawBytes.toString('hex');
@@ -47,5 +47,3 @@ async function generateSingedUploadUrl() {
     const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
     return uploadUrl;
 }
-
-module.exports = generateSingedUploadUrlMp4, generateSingedUploadUrl;

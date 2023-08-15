@@ -4,12 +4,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { Dna } from "react-loader-spinner";
 import "./App.css";
 
-
 type TransodedData = {
   url: string,
   quality: string,
 }
-
 type UserVideoData = {
   id: string,
   s3Url: string,
@@ -27,7 +25,6 @@ function App() {
     setLoading(true);
     const response = await axios.get('http://localhost:3000/s3url');
     const url: string = response.data.url;
-    console.log(url);
 
     //upload video to s3
     const contentType: string = 'video/' + file.name.split('.').pop();
@@ -73,8 +70,8 @@ function App() {
 
   const fileChange = (e: any) => {
     const selectedFile = e.target.files[0];
-    const fileSize = selectedFile.size / (1024 * 1024);
-    const maxFileSize = 25;
+    const fileSize :number = selectedFile.size / (1024 * 1024);
+    const maxFileSize : number = 25;
     if (fileSize <= maxFileSize) {
       console.log("File is within the size limit.");
       console.log(e.target.files[0].name);
